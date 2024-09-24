@@ -19,7 +19,8 @@ internal static class Command
 
         var login = bot.BotConfig.SteamLogin;
         var passwd = bot.BotConfig.SteamPassword;
-        sb.Append($"{login} : {passwd} - ");
+        var email = await WebRequest.GetAccountEmail(bot).ConfigureAwait(false) ?? "[null]";
+        sb.Append($"{login}:{passwd}:{email} - ");
 
         if (bot.IsConnectedAndLoggedOn)
         {
@@ -28,7 +29,7 @@ internal static class Command
             var result = await WebRequest.GetGamePlayTime(bot).ConfigureAwait(false);
             if (result == null)
             {
-                sb.Append("Network error");
+                sb.Append("[Network error]");
             }
             else
             {
@@ -36,7 +37,7 @@ internal static class Command
                 {
                     if (!first)
                     {
-                        sb.Append(" , ");
+                        sb.Append(",");
                     }
                     else
                     {
@@ -44,14 +45,14 @@ internal static class Command
                     }
 
                     var playHours = game.PlayTimeForever / 60.0;
-                    var gameName = game.Name?.Replace("(", "[").Replace(")", "]") ?? "[null]";
+                    var gameName = game.Name?.Replace(",", "").Replace("(", "[").Replace(")", "]") ?? "[null]";
                     sb.Append($"{gameName} ({playHours:0.00})");
                 }
             }
         }
         else
         {
-            sb.Append("Bot not connected");
+            sb.Append("[Bot not connected]");
         }
 
         return sb.ToString();
@@ -64,7 +65,7 @@ internal static class Command
     /// <param name="filename"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static async Task<string?> ResponseDumpPlayTime( string? filename)
+    internal static async Task<string?> ResponseDumpPlayTime(string? filename)
     {
         var bots = Bot.GetBots("ASF");
         if (bots == null || bots.Count == 0)

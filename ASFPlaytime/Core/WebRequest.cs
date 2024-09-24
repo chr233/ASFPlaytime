@@ -22,4 +22,23 @@ internal static class WebRequest
 
         return response?.Content?.Response?.Games;
     }
+    
+    /// <summary>
+    /// 获取账号邮箱
+    /// </summary>
+    /// <param name="bot"></param>
+    /// <returns></returns>
+    internal static async Task<string?> GetAccountEmail(Bot bot)
+    {
+        var request = new Uri(SteamStoreURL, "/account");
+        var response = await bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request, referer: SteamStoreURL).ConfigureAwait(false);
+        
+        if (response?.Content == null)
+        {
+            return null;
+        }
+
+        var eleEmail = response.Content.QuerySelector("#main_content div.account_setting_sub_block:nth-child(1) > div:nth-child(2) span.account_data_field");
+        return eleEmail?.TextContent;
+    }
 }
