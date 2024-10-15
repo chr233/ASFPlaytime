@@ -22,7 +22,7 @@ internal static class AdapterBridge
 
             if (registerModule != null && adapterEndpoint != null)
             {
-                var result = registerModule?.Invoke(null, [pluginName, pluginId, cmdPrefix, repoName, pluinVersion, cmdHandler]);
+                var result = registerModule.Invoke(null, [pluginName, pluginId, cmdPrefix, repoName, pluinVersion, cmdHandler]);
 
                 if (result is string str)
                     if (str == pluginName)
@@ -34,7 +34,8 @@ internal static class AdapterBridge
 #if DEBUG
         catch (Exception ex)
         {
-            ASFLogger.LogGenericException(ex, "Community with ASFEnhance failed");
+            ASFLogger.LogGenericException(ex);
+            ASFLogger.LogGenericError("Community with ASFEnhance failed");
         }
 #else
         catch (Exception)

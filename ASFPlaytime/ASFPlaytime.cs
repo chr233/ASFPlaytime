@@ -74,11 +74,14 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
         if (Config.Statistic && !ASFEBridge)
         {
             var request = new Uri("https://asfe.chrxw.com/asflevelupbot");
+
+            async void Callback(object? _)
+            {
+                await ASF.WebBrowser!.UrlGetToHtmlDocument(request).ConfigureAwait(false);
+            }
+
             StatisticTimer = new Timer(
-                async (_) =>
-                {
-                    await ASF.WebBrowser!.UrlGetToHtmlDocument(request).ConfigureAwait(false);
-                },
+                Callback,
                 null,
                 TimeSpan.FromSeconds(30),
                 TimeSpan.FromHours(24)
@@ -125,12 +128,11 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
     /// <summary>
     /// 获取插件信息
     /// </summary>
-    private static string? PluginInfo => string.Format("{0} {1}", nameof(ASFPlaytime), MyVersion);
+    private static string PluginInfo => $"{nameof(ASFPlaytime)} {MyVersion}";
 
     /// <summary>
     /// 处理命令
     /// </summary>
-    /// <param name="bot"></param>
     /// <param name="access"></param>
     /// <param name="cmd"></param>
     /// <param name="message"></param>
@@ -138,7 +140,7 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
     /// <param name="steamId"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    private static Task<string?>? ResponseCommand(Bot bot, EAccess access, string cmd, string message, string[] args)
+    private static Task<string?>? ResponseCommand(EAccess access, string cmd, string message, string[] args)
     {
         var argLength = args.Length;
 
@@ -150,7 +152,7 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
                 //Plugin Info
                 "ASFPLAYTIME" or
                 "ASFP" when access >= EAccess.FamilySharing =>
-                    Task.FromResult(PluginInfo),
+                    Task.FromResult<string?>(PluginInfo),
 
                 "DUMPPLAYTIME" when access >= EAccess.Master =>
                     Command.ResponseDumpPlayTime( "playtime.txt"),
@@ -198,7 +200,7 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
                 cmd = cmd[5..];
             }
 
-            var task = ResponseCommand(bot, access, cmd, message,args);
+            var task = ResponseCommand(access, cmd, message,args);
             if (task != null)
             {
                 return await task.ConfigureAwait(false);

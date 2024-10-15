@@ -37,7 +37,7 @@ internal static class Command
                 {
                     if (!first)
                     {
-                        sb.Append(",");
+                        sb.Append(',');
                     }
                     else
                     {
