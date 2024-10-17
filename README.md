@@ -1,11 +1,4 @@
-# ASFEnhance
-
-![ASFEnhance](https://socialify.git.ci/chr233/ASFEnhance/image?description=1&forks=1&language=1&name=1&owner=1&pattern=Diagonal%20Stripes&stargazers=1&theme=Auto)
-
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/3d174e792fd4412bb6b34a77d67e5dea)](https://www.codacy.com/gh/chr233/ASFEnhance/dashboard)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/chr233/ASFEnhance/publish.yml?logo=github)
-[![License](https://img.shields.io/github/license/chr233/ASFEnhance?logo=apache)](https://github.com/chr233/ASFEnhance/blob/master/license)
-[![Crowdin](https://badges.crowdin.net/asfenhance/localized.svg)](https://crowdin.com/project/asfenhance)
+# ASFPlaytime
 
 [![GitHub Release](https://img.shields.io/github/v/release/chr233/ASFEnhance?logo=github)](https://github.com/chr233/ASFEnhance/releases)
 [![GitHub Release](https://img.shields.io/github/v/release/chr233/ASFEnhance?include_prereleases&label=pre-release&logo=github)](https://github.com/chr233/ASFEnhance/releases)
@@ -29,7 +22,7 @@
 2. 解压后将 `ASFPlaytime.dll` 丢进 `ArchiSteamFarm` 目录下的 `plugins` 文件夹
 3. 重新启动 `ArchiSteamFarm` , 使用命令 `ASFPlaytime` 或 `ASFP` 来检查插件是否正常工作
 
-# Donate
+## Donate
 
 |               ![img][afdian_qr]                |                   ![img][bmac_qr]                   |                       ![img][usdt_qr]                       |
 | :--------------------------------------------: | :-------------------------------------------------: | :---------------------------------------------------------: |
