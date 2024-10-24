@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace ASFPlaytime.Core;
+namespace ASFPlaytime.Data;
 internal sealed record GetOwnedGamesResponse
 {
     [JsonPropertyName("response")]
