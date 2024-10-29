@@ -28,6 +28,9 @@ indent_style = tab
 [*.cs]
 
 #### Core EditorConfig 选项 ####
+[*.cs]
+# Enforce braces for if statements
+csharp_prefer_braces = true:warning
 
 # 缩进和间距
 indent_size = 4
@@ -123,7 +126,6 @@ csharp_preferred_modifier_order = public,private,protected,internal,static,exter
 
 # 代码块首选项
 csharp_style_namespace_declarations=file_scoped:suggestion
-csharp_prefer_braces = false
 csharp_prefer_simple_using_statement = true
 
 # 表达式级首选项
