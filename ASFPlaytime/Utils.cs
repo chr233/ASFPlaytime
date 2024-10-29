@@ -94,4 +94,49 @@ internal static class Utils
     /// 默认语言设置
     /// </summary>
     internal static string DefaultOrCurrentLanguage => Config.DefaultLanguage ?? Langs.Language;
+    
+    /// <summary>
+    /// 货币ISO名称转成符号
+    /// </summary>
+    internal static Dictionary<string, string> Currency2Symbol { get; } = new() {
+        { "AED", "AED" },
+        { "ARS", "ARS$" },
+        { "AUD", "A$" },
+        { "BRL", "R$" },
+        { "CAD", "CDN$" },
+        { "CHF", "CHF" },
+        { "CLP", "CLP$" },
+        { "CNY", "¥" },
+        { "COP", "COL$" },
+        { "CRC", "₡" },
+        { "EUR", "€" },
+        { "GBP", "£" },
+        { "HKD", "HK$" },
+        { "IDR", "Rp" },
+        { "ILS", "₪" },
+        { "INR", "₹" },
+        { "JPY", "¥" },
+        { "KRW", "₩" },
+        { "KWD", "KD" },
+        { "KZT", "₸" },
+        { "MXN", "Mex$" },
+        { "MYR", "RM" },
+        { "NOK", "kr" },
+        { "NZD", "NZ$" },
+        { "PEN", "S/." },
+        { "PHP", "₱" },
+        { "PLN", "zł" },
+        { "QAR", "QR" },
+        { "RUB", "₽" },
+        { "SAR", "SR" },
+        { "SGD", "S$" },
+        { "THB", "฿" },
+        { "TRY", "₺" },
+        { "TWD", "NT$" },
+        { "UAH", "₴" },
+        { "USD", "$" },
+        { "UYU", "$U" },
+        { "VND", "₫" },
+        { "ZAR", "R" },
+    };
 }

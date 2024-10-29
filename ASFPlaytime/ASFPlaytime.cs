@@ -11,19 +11,24 @@ using System.Text.Json;
 namespace ASFPlaytime;
 
 [Export(typeof(IPlugin))]
-internal sealed class ASFPlaytime : IASF, IBotCommand2
+sealed class ASFPlaytime : IASF, IBotCommand2
 {
+    bool ASFEBridge;
+
+    Timer? StatisticTimer { get; set; }
+
+    /// <summary>
+    ///     获取插件信息
+    /// </summary>
+    static string PluginInfo => $"{nameof(ASFPlaytime)} {MyVersion}";
+
     public string Name => nameof(ASFPlaytime);
 
     public Version Version => MyVersion;
 
-    private bool ASFEBridge;
-
-    private Timer? StatisticTimer { get; set; }
-
 
     /// <summary>
-    /// ASF启动事件
+    ///     ASF启动事件
     /// </summary>
     /// <param name="additionalConfigProperties"></param>
     /// <returns></returns>
@@ -53,7 +58,7 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
             }
         }
 
-        Config = config ?? new();
+        Config = config ?? new PluginConfig();
 
         var warnings = new StringBuilder("\n");
 
@@ -73,7 +78,7 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
         //统计
         if (Config.Statistic && !ASFEBridge)
         {
-            var request = new Uri("https://asfe.chrxw.com/asflevelupbot");
+            var request = new Uri("https://asfe.chrxw.com/asfplaytime");
 
             async void Callback(object? _)
             {
@@ -92,11 +97,11 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
     }
 
     /// <summary>
-    /// 插件加载事件
+    ///     插件加载事件
     /// </summary>
     /// <returns></returns>
     /// <summary>
-    /// 插件加载事件
+    ///     插件加载事件
     /// </summary>
     /// <returns></returns>
     public Task OnLoaded()
@@ -126,50 +131,7 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
     }
 
     /// <summary>
-    /// 获取插件信息
-    /// </summary>
-    private static string PluginInfo => $"{nameof(ASFPlaytime)} {MyVersion}";
-
-    /// <summary>
-    /// 处理命令
-    /// </summary>
-    /// <param name="access"></param>
-    /// <param name="cmd"></param>
-    /// <param name="message"></param>
-    /// <param name="args"></param>
-    /// <param name="steamId"></param>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
-    private static Task<string?>? ResponseCommand(EAccess access, string cmd, string message, string[] args)
-    {
-        var argLength = args.Length;
-
-        return argLength switch
-        {
-            0 => throw new InvalidOperationException(nameof(args)),
-            1 => cmd switch //不带参数
-            {
-                //Plugin Info
-                "ASFPLAYTIME" or
-                "ASFP" when access >= EAccess.FamilySharing =>
-                    Task.FromResult<string?>(PluginInfo),
-
-                "DUMPPLAYTIME" when access >= EAccess.Master =>
-                    Command.ResponseDumpPlayTime( "playtime.txt"),
-                _ => null,
-            },
-            _ => cmd switch //带参数
-            {
-                "DUMPPLAYTIME" when  access >= EAccess.Master =>
-                    Command.ResponseDumpPlayTime( Utilities.GetArgsAsText(message,1)),
-                
-                _ => null,
-            }
-        };
-    }
-
-    /// <summary>
-    /// 处理命令事件
+    ///     处理命令事件
     /// </summary>
     /// <param name="bot"></param>
     /// <param name="access"></param>
@@ -200,15 +162,13 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
                 cmd = cmd[5..];
             }
 
-            var task = ResponseCommand(access, cmd, message,args);
+            var task = ResponseCommand(access, cmd, message, args);
             if (task != null)
             {
                 return await task.ConfigureAwait(false);
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         catch (Exception ex)
         {
@@ -220,5 +180,49 @@ internal sealed class ASFPlaytime : IASF, IBotCommand2
 
             return ex.StackTrace;
         }
+    }
+
+    /// <summary>
+    ///     处理命令
+    /// </summary>
+    /// <param name="access"></param>
+    /// <param name="cmd"></param>
+    /// <param name="message"></param>
+    /// <param name="args"></param>
+    /// <param name="steamId"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    static Task<string?>? ResponseCommand(EAccess access, string cmd, string message, string[] args)
+    {
+        var argLength = args.Length;
+
+        return argLength switch
+        {
+            0 => throw new InvalidOperationException(nameof(args)),
+            1 => cmd switch //不带参数
+            {
+                //Plugin Info
+                "ASFPLAYTIME" or
+                    "ASFP" when access >= EAccess.FamilySharing =>
+                    Task.FromResult<string?>(PluginInfo),
+
+                "DUMPPLAYTIME" when access >= EAccess.Master =>
+                    Command.ResponseDumpPlayTime("playtime.txt"),
+
+                "DUMPPURCHASE" when access >= EAccess.Master =>
+                    Command.ResponseDumpPurchaseHistory("purchase.txt"),
+                _ => null
+            },
+            _ => cmd switch //带参数
+            {
+                "DUMPPLAYTIME" when access >= EAccess.Master =>
+                    Command.ResponseDumpPlayTime(Utilities.GetArgsAsText(message, 1)),
+
+                "DUMPPURCHASE" when access >= EAccess.Master =>
+                    Command.ResponseDumpPurchaseHistory(Utilities.GetArgsAsText(message, 1)),
+
+                _ => null
+            }
+        };
     }
 }

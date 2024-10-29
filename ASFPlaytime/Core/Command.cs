@@ -5,15 +5,15 @@ using System.Text;
 
 namespace ASFPlaytime.Core;
 
-internal static class Command
+static class Command
 {
     /// <summary>
-    /// 获取游玩时间
+    ///     获取游玩时间
     /// </summary>
     /// <param name="bot"></param>
     /// <param name="savePath"></param>
     /// <returns></returns>
-    internal static async Task<string?> ResponseDumpSingleBotPlayTime(Bot bot)
+    static async Task<string?> ResponseDumpSingleBotPlayTime(Bot bot)
     {
         var sb = new StringBuilder();
 
@@ -59,7 +59,7 @@ internal static class Command
     }
 
     /// <summary>
-    /// 获取游玩时间 (多个Bot)
+    ///     获取游玩时间 (多个Bot)
     /// </summary>
     /// <param name="botNames"></param>
     /// <param name="filename"></param>
@@ -84,53 +84,87 @@ internal static class Command
             await File.WriteAllTextAsync(path, fileContent).ConfigureAwait(false);
             return $"Dump to {path} success";
         }
-        else
-        {
-            return "Dump failed";
-        }
+
+        return "Dump failed";
     }
 
     /// <summary>
-    /// 读取账号消费历史
+    ///     读取账号消费历史
     /// </summary>
     /// <param name="bot"></param>
+    /// <param name="exchangeData"></param>
     /// <returns></returns>
-    internal static async Task<string?> ResponseAccountHistory(Bot bot)
+    static async Task<string?> ResponseDumpPurchaseHistory(Bot bot)
     {
         if (!bot.IsConnectedAndLoggedOn)
         {
             return bot.FormatBotResponse(Strings.BotNotConnected);
         }
 
-        string result = await WebRequest.GetAccountHistoryDetail(bot).ConfigureAwait(false);
+        var sb = new StringBuilder();
 
-        return result;
+        var login = bot.BotConfig.SteamLogin;
+        var passwd = bot.BotConfig.SteamPassword;
+        var email = await WebRequest.GetAccountEmail(bot).ConfigureAwait(false) ?? "[null]";
+        sb.Append($"{login}:{passwd}:{email} - ");
+
+        if (bot.IsConnectedAndLoggedOn)
+        {
+            var historyData = await WebRequest.GetAccountHistoryDetail(bot).ConfigureAwait(false);
+            if (historyData == null)
+            {
+                sb.Append("[Network error]");
+            }
+            else
+            {
+                var myCurrency = bot.WalletCurrency.ToString();
+                if (!Currency2Symbol.TryGetValue(myCurrency, out var symbol))
+                {
+                    symbol = myCurrency;
+                }
+
+                var totalSpend = historyData.StorePurchase + historyData.GiftPurchase + historyData.InGamePurchase -
+                                 historyData.RefundPurchase;
+                var totalTopped = historyData.WalletPurchase;
+
+                sb.Append($"{totalSpend*0.01:0.00}{symbol} / {totalTopped*0.01:0.00}{symbol}");
+            }
+        }
+        else
+        {
+            sb.Append("[Bot not connected]");
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>
-    /// 读取账号消费历史 (多个Bot)
+    ///     读取账号消费历史 (多个Bot)
     /// </summary>
     /// <param name="botNames"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    internal static async Task<string?> ResponseAccountHistory(string botNames)
+    internal static async Task<string?> ResponseDumpPurchaseHistory(string? filename)
     {
-        if (string.IsNullOrEmpty(botNames))
+        var bots = Bot.GetBots("ASF");
+        if (bots == null || bots.Count == 0)
         {
-            throw new ArgumentNullException(nameof(botNames));
+            return FormatStaticResponse(Strings.BotNotFound, "ASF");
         }
 
-        var bots = Bot.GetBots(botNames);
 
-        if ((bots == null) || (bots.Count == 0))
-        {
-            return FormatStaticResponse(Strings.BotNotFound, botNames);
-        }
-
-        var results = await Utilities.InParallel(bots.Select(bot => ResponseAccountHistory(bot))).ConfigureAwait(false);
-
+        var results = await Utilities.InParallel(bots.Select(ResponseDumpPurchaseHistory)).ConfigureAwait(false);
         var responses = new List<string?>(results.Where(result => !string.IsNullOrEmpty(result)));
 
-        return responses.Count > 0 ? string.Join(Environment.NewLine, responses) : null;
+        var fileContent = string.Join(Environment.NewLine, responses);
+
+        if (!string.IsNullOrEmpty(fileContent) && !string.IsNullOrEmpty(filename))
+        {
+            var path = Path.Combine(MyDirectory, filename);
+            await File.WriteAllTextAsync(path, fileContent).ConfigureAwait(false);
+            return $"Dump to {path} success";
+        }
+
+        return "Dump failed";
     }
 }
