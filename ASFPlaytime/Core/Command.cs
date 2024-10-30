@@ -11,7 +11,6 @@ static class Command
     ///     获取游玩时间
     /// </summary>
     /// <param name="bot"></param>
-    /// <param name="savePath"></param>
     /// <returns></returns>
     static async Task<string?> ResponseDumpSingleBotPlayTime(Bot bot)
     {
@@ -61,7 +60,6 @@ static class Command
     /// <summary>
     ///     获取游玩时间 (多个Bot)
     /// </summary>
-    /// <param name="botNames"></param>
     /// <param name="filename"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
@@ -92,7 +90,6 @@ static class Command
     ///     读取账号消费历史
     /// </summary>
     /// <param name="bot"></param>
-    /// <param name="exchangeData"></param>
     /// <returns></returns>
     static async Task<string?> ResponseDumpPurchaseHistory(Bot bot)
     {
@@ -124,10 +121,10 @@ static class Command
                 }
 
                 var totalSpend = historyData.StorePurchase + historyData.GiftPurchase + historyData.InGamePurchase -
-                                 historyData.RefundPurchase;
+                                 historyData.RefundPurchase + historyData.MarketPurchase;
                 var totalTopped = historyData.WalletPurchase;
 
-                sb.Append($"{totalSpend*0.01:0.00}{symbol} / {totalTopped*0.01:0.00}{symbol}");
+                sb.Append($"{totalSpend * 0.01:0.00}{symbol} / {totalTopped * 0.01:0.00}{symbol}");
             }
         }
         else
@@ -141,7 +138,7 @@ static class Command
     /// <summary>
     ///     读取账号消费历史 (多个Bot)
     /// </summary>
-    /// <param name="botNames"></param>
+    /// <param name="filename"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     internal static async Task<string?> ResponseDumpPurchaseHistory(string? filename)
