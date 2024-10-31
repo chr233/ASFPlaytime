@@ -87,7 +87,7 @@ static class HtmlParser
                     return defaultCurrency;
                 }
 
-                ASFLogger.LogGenericWarning($"检测货币符号失败, 使用默认货币单位 {defaultCurrency}");
+                ASFLogger.LogGenericWarning($"检测货币符号 {symbol1} {symbol2} 失败, 使用默认货币单位 {defaultCurrency}");
                 return defaultCurrency;
             }
 

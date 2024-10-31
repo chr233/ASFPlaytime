@@ -1,4 +1,4 @@
-namespace ASFPlaytime;
+namespace ASFPlaytime.Data;
 
 /// <summary>
 /// 应用配置

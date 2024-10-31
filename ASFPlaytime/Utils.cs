@@ -2,6 +2,7 @@ using ArchiSteamFarm.Core;
 using ArchiSteamFarm.NLog;
 using ArchiSteamFarm.Steam;
 using ArchiSteamFarm.Steam.Integration;
+using ASFPlaytime.Data;
 using System.Reflection;
 using System.Text;
 

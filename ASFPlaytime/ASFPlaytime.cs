@@ -1,7 +1,9 @@
 using ArchiSteamFarm.Core;
+using ArchiSteamFarm.Helpers.Json;
 using ArchiSteamFarm.Plugins.Interfaces;
 using ArchiSteamFarm.Steam;
 using ASFPlaytime.Core;
+using ASFPlaytime.Data;
 using System.ComponentModel;
 using System.Composition;
 using System.Reflection;
@@ -44,7 +46,7 @@ sealed class ASFPlaytime : IASF, IBotCommand2
                 {
                     try
                     {
-                        config = configValue.Deserialize<PluginConfig>();
+                        config = configValue.ToJsonObject<PluginConfig>();
                         if (config != null)
                         {
                             break;
