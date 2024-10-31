@@ -39,7 +39,8 @@
 
 ## Commands
 
-| 命令                  | 缩写   | 权限            | 说明                                      |
-| --------------------- | ------ | --------------- | ----------------------------------------- |
-| `ASFPLAYTIME`         | `ASFP` | `FamilySharing` | Test if plugin is installed               |
-| `DUMPPLAYTIME [Bots]` | -      | `Operator`      | Dump account's playtime summary to a file |
+| 命令                      | 缩写   | 权限            | 说明                                      |
+| ------------------------- | ------ | --------------- | ----------------------------------------- |
+| `ASFPLAYTIME`             | `ASFP` | `FamilySharing` | Test if plugin is installed               |
+| `DUMPPLAYTIME [filename]` | -      | `Operator`      | Dump account's playtime summary to a file |
+| `DUMPPLAYTIME [filename]` | -      | `Operator`      | Dump account's purchase summary to a file |
