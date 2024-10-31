@@ -105,5 +105,6 @@ internal static class CurrencyHelper
         "EUR",
         "PLN",
         "VND",
+        "RUB",
     ];
 }

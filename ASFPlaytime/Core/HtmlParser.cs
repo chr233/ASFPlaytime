@@ -87,7 +87,7 @@ static class HtmlParser
                     return defaultCurrency;
                 }
 
-                ASFLogger.LogGenericWarning(string.Format("检测货币符号失败, 使用默认货币单位 {0}", defaultCurrency));
+                ASFLogger.LogGenericWarning($"检测货币符号失败, 使用默认货币单位 {defaultCurrency}");
                 return defaultCurrency;
             }
 
@@ -126,11 +126,11 @@ static class HtmlParser
                     return (negative ? -1 : 1) * (price / rate);
                 }
 
-                ASFLogger.LogGenericWarning(string.Format("无 {0} 货币的汇率", currency));
+                ASFLogger.LogGenericWarning($"无 {currency} 货币的汇率");
                 return (negative ? -1 : 1) * price;
             }
 
-            ASFLogger.LogGenericWarning(string.Format("解析价格 {0} 失败", match.Groups[3].Value));
+            ASFLogger.LogGenericWarning($"解析价格 {match.Groups[3].Value} 失败");
             return 0;
         }
 
