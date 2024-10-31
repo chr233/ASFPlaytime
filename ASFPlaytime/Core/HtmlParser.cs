@@ -154,13 +154,13 @@ static class HtmlParser
 
             var strItem = whtItem?.Text().Trim().Replace("\t", "") ?? "";
             var strType = whtType?.Text().Trim().Replace("\t", "") ?? "";
-            var strTotal = whtTotal?.Text().Replace("资金", "").Trim().Replace("\t", "") ?? "";
+            var strTotal = whtTotal?.Text().Replace("Credit", "").Trim().Replace("\t", "") ?? "";
             var strChange = whtChange?.Text().Trim().Replace("\t", "") ?? "";
 
             if (!string.IsNullOrEmpty(strType))
                 // 排除退款和转换货币
             {
-                if (!string.IsNullOrEmpty(strType) && !strType.StartsWith("转换") && !strType.StartsWith("退款"))
+                if (!string.IsNullOrEmpty(strType) && !strType.StartsWith("Conversion") && !strType.StartsWith("Refund"))
                 {
                     var total = (int)(ParseMoneyString(strTotal) * 100);
 
@@ -183,9 +183,9 @@ static class HtmlParser
                         continue;
                     }
 
-                    if (strType.StartsWith("购买"))
+                    if (strType.StartsWith("Purchase"))
                     {
-                        if (!strItem.Contains("钱包资金"))
+                        if (!strItem.Contains("Wallet Credit"))
                         {
                             if (!isRefund)
                             {
@@ -203,7 +203,7 @@ static class HtmlParser
                             result.WalletPurchase += total;
                         }
                     }
-                    else if (strType.StartsWith("礼物购买"))
+                    else if (strType.StartsWith("Gift Purchase"))
                     {
                         if (!isRefund)
                         {
@@ -216,7 +216,7 @@ static class HtmlParser
                             result.RefundPurchaseWallet += walletChangeAbs;
                         }
                     }
-                    else if (strType.StartsWith("游戏内购买"))
+                    else if (strType.StartsWith("In-Game Purchase"))
                     {
                         if (!isRefund)
                         {
@@ -228,7 +228,7 @@ static class HtmlParser
                             result.RefundPurchaseWallet += walletChangeAbs;
                         }
                     }
-                    else if (strType.Contains("市场交易"))
+                    else if (strType.Contains("Market Transactions"))
                     {
                         if (!isRefund)
                         {

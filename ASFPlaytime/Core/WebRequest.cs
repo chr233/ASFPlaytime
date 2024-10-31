@@ -97,7 +97,7 @@ static class WebRequest
     /// <returns></returns>
     static async Task<HtmlDocumentResponse?> GetAccountHistoryAjax(Bot bot)
     {
-        var request = new Uri(SteamStoreURL, "/account/history?l=schinese");
+        var request = new Uri(SteamStoreURL, "/account/history?l=english");
         var response = await bot.ArchiWebHandler.UrlGetToHtmlDocumentWithSession(request, referer: SteamStoreURL)
             .ConfigureAwait(false);
         return response;
